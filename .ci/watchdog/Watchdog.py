@@ -153,7 +153,7 @@ class Watchdog:
             :rtype:             Bool
         """
         # Check if variable satisfies logical operation with defined values (e.g. "behind" in pr.mergeable.state)
-        for variable, statement in criteria.iteritems():
+        for variable, statement in criteria.items():
             for value in statement.get("values"):
                 operation = value + statement.get("operator") + variable 
                 if eval(operation):
