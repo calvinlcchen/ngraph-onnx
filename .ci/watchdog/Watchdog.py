@@ -152,27 +152,13 @@ class Watchdog:
             :return:            Returns True if PR should be ignored
             :rtype:             Bool
         """
-        # Filter by base branch ref
-        for ignore_base_ref in criteria.get("pr_base_ref_not_equal"):
-            if ignore_base_ref != pr.base.ref:
-                log.info('PR#{} should be ignored because base ref (\"{}\") is not \"{}\" .'.format(str(pr.number), pr.base.ref , ignore_base_ref))
-                return True
-        # Filter by mergeable states
-        for ignore_state in criteria.get("pr_mergeable_state"):
-            if ignore_state in pr.mergeable_state:
-                log.info('PR#{} should be ignored because mergeable state is \"{}\" .'.format(str(pr.number), ignore_state))
-                return True
-        # Filter by title
-        for ignore_title in criteria.get("pr_title_contains"):
-            if ignore_title in pr.title:
-                log.info('PR#{} should be ignored because \"{}\" present in title: \"{}\"'.format(str(pr.number), ignore_title, pr.title))
-                return True
-        # Filter by labels
-        label_names = lambda pr : [ label.name for label in pr.get_labels() ]
-        for ignore_label in criteria.get("pr_labels"):
-            if ignore_label in label_names(pr):
-                log.info('PR#{} should be ignored because label \"{}\" is present.'.format(str(pr.number), ignore_label))
-                return True
+        # Check if variable satisfies logical operation with defined values (e.g. "behind" in pr.mergeable.state)
+        for variable, statement in criteria.iteritems():
+            for value in statement.get("values"):
+                operation = value + statement.get("operator") + variable 
+                if eval(operation):
+                    log.info('PR#{} should be ignored because {} .'.format(str(pr.number), operation))
+                    return True
         
         return False
 
