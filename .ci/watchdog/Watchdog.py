@@ -155,7 +155,7 @@ class Watchdog:
         # Check if variable satisfies logical operation with defined values (e.g. "behind" in pr.mergeable.state)
         for variable, statement in criteria.items():
             for value in statement.get("values"):
-                operation = value + statement.get("operator") + variable 
+                operation = "value" + statement.get("operator") + variable 
                 if eval(operation):
                     log.info('PR#{} should be ignored because {} .'.format(str(pr.number), operation))
                     return True

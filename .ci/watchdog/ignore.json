@@ -1,5 +1,5 @@
 {
-    "pr.base.ref.not_equal" : {
+    "pr.base.ref" : {
         "operator" : "!=",
         "values" : ["master"]
     },
